@@ -21,8 +21,6 @@ class Main:
         if opcion=="1":
             print("\n")
             Automata.Automata().aceptar(fichero)
-            # Reader.Reader().cargar(fichero)
-            # Reader.Reader().analizar()
         elif opcion=="2":
             print("\n")
             #eInicio = input("Estación inicio: ")
