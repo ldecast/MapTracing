@@ -1,5 +1,6 @@
 import Estacion
 import Ruta
+import Graficador
 class Automata:
 
     def aceptar(self, entrada):
@@ -10,6 +11,8 @@ class Automata:
         lexema = ""
         estado = 0
         padre = []
+        errores = 0
+        error_lista = []
         # tipoPadre = ""
 
         for linea in file.readlines():
@@ -91,7 +94,12 @@ class Automata:
                     # elif caracter == '#':
                     #     estado = 7
                     else:
-                        estado = -13
+                        errores +=1
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        # Graficador.Graficador().reportar(errores,fila,columna,caracter,"Desconocido")
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        estado = 0
+                        continue
                 
                 elif estado == 1:
                     if ord(caracter) >= 65 and ord(caracter) <= 122:#es letra
@@ -99,7 +107,11 @@ class Automata:
                     elif caracter == "/":
                         estado = 10
                     else:
-                        estado = -1
+                        errores +=1
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) + " Caracter: " + caracter)
+                        estado = 1
+                        continue
                     
                 elif estado == 2:
                     if ord(caracter) >= 65 and ord(caracter) <= 122:#es letra
@@ -111,7 +123,11 @@ class Automata:
                     elif caracter == ">":
                         estado = 3
                     else:
-                        estado = -2
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        estado = 2
+                        continue
                     
                 elif estado == 3:
                     # padre.append(lexema)
@@ -124,7 +140,9 @@ class Automata:
                     elif caracter == "<":
                         estado = 1
                     else:
-                        print("Fila: "+str(fila) + "Columna: " + str(columna) + "Caracter: " + caracter)
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
                         estado = 3
                         continue
                         # estado = -3
@@ -139,7 +157,11 @@ class Automata:
                     elif caracter == "<":
                         estado = 9
                     else:
-                        estado = -4
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        estado = 4
+                        continue
                 
                 elif estado == 5:
                     if ord(caracter) >= 48 and ord(caracter) <=57:#es digito
@@ -149,7 +171,11 @@ class Automata:
                     elif caracter == "<":
                         estado = 9
                     else:
-                        estado = -5
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        estado = 5
+                        continue
                 
                 elif estado == 6:
                     if ord(caracter) >= 48 and ord(caracter) <=57:#es digito
@@ -157,7 +183,11 @@ class Automata:
                     elif caracter == "<":
                         estado = 9
                     else:
-                        estado = -6
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        estado = 6
+                        continue
                 
                 elif estado == 7:
                     if ord(caracter) >= 65 and ord(caracter) <= 122:#es letra
@@ -165,7 +195,11 @@ class Automata:
                     elif ord(caracter) >= 48 and ord(caracter) <=57:#es digito
                         estado = 8
                     else:
-                        estado = -7
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        estado = 7
+                        continue
                 
                 elif estado == 8:
                     if ord(caracter) >= 65 and ord(caracter) <= 122:#es letra
@@ -175,20 +209,31 @@ class Automata:
                     elif caracter == "<":
                         estado = 9
                     else:
-                        estado = -8
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        estado = 8
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        continue
                 
                 elif estado == 9:
-                    
                     if caracter == "/":
                         estado = 10
                     else:
-                        estado = -9
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        estado = 9
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        continue
 
                 elif estado == 10:
                     if ord(caracter) >= 65 and ord(caracter) <= 122:#es letra
                         estado = 11
                     else:
-                        estado = -10
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        estado = 10
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        continue            
 
                 elif estado == 11:
                     if ord(caracter) >= 65 and ord(caracter) <= 122:#es letra
@@ -200,13 +245,21 @@ class Automata:
                     elif caracter == ">":
                         estado = 12
                     else:
-                        estado = -11
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        estado = 11
+                        continue 
                 
                 elif estado == 12:
                     if caracter == "<":
                         estado = 9
                     else:
-                        estado == -12
+                        print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
+                        errores +=1
+                        error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                        estado = 12
+                        continue 
 
                 
             if estado == 12:# or estado == 3 or estado == 4 or estado == 5 or estado == 7: #saber si la cadena es valida
@@ -223,6 +276,7 @@ class Automata:
                 
             else:
                 print('Cadena inválida: '+lexema+'\n'+"Estado: "+str(estado))
-
+        if not error_lista == []:
+            Graficador.Graficador().reportar(error_lista)
             # estado = 0
             # lexema = ''
