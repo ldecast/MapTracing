@@ -3,24 +3,57 @@ import Ruta
 import Graficador
 class Automata:
 
+    def token(self, lexema):
+        a = lexema.lower()
+        if 'ruta' in a:
+            return 'ruta'
+        elif 'estacion' in a:
+            return 'estación'
+        elif 'nombre' in a:
+            return 'nombre'
+        elif 'peso' in a:
+            return 'peso'
+        elif 'inicio' in a:
+            return 'inicio'
+        elif 'fin' in a:
+            return 'fin'
+        elif 'estado' in a:
+            return 'estado'
+        elif 'color' in a:
+            return 'color'
+    
+    def lexem(self, lexema):
+        if lexema.count('>') > 1:
+            a = [idx for idx, x in enumerate(lexema) if x=='<']
+            b = [idx for idx, x in enumerate(lexema) if x=='>']
+            c = lexema[a.pop()+1:b.pop()]
+            return c
+        elif lexema.count('>') == 1:
+            a = lexema[lexema.index('<')+1:lexema.index('>')]
+            return a
+            
+
     def aceptar(self, entrada):
         file = open(entrada, 'r', encoding= "utf8") 
         # file = open("C:\\Users\\luisd\\Desktop\\hola.txt",'r',encoding="utf8")
-        fila = 1
+        fila = 0
         columna = 0
         lexema = ""
         estado = 0
-        padre = []
+        tokens = 0
+        token_lista = []
         errores = 0
         error_lista = []
         # tipoPadre = ""
 
         for linea in file.readlines():
+            fila = fila + 1
+            columna = 0
             for caracter in linea:
-                columna += 1
-                if caracter == "\n" or caracter == "\r":
-                    fila += 1
-                    columna = 1
+                columna = columna + 1
+                if caracter == "\n": # or caracter == "\r":
+                    # fila += 1
+                    # columna = 0
                     continue
                 elif caracter == "\t":
                     # columna += 4
@@ -36,10 +69,10 @@ class Automata:
                     print("Fila: "+str(fila) + "Columna: " + str(columna) + "Caracter: " + caracter)
                     estado = 2
                     continue
-                # elif estado == -3:
-                #     print("Fila: "+str(fila) + "Columna: " + str(columna) + "Caracter: " + caracter)
-                #     estado = 3
-                #     continue
+                elif estado == -3:
+                    print("Fila: "+str(fila) + "Columna: " + str(columna) + "Caracter: " + caracter)
+                    estado = 3
+                    continue
                 elif estado == -4:
                     print("Fila: "+str(fila) + "Columna: " + str(columna) + "Caracter: " + caracter)
                     estado = 4
@@ -121,6 +154,9 @@ class Automata:
                     elif caracter == '_':
                         estado = 2
                     elif caracter == ">":
+                        # print(lexema, fila, columna)
+                        tokens += 1
+                        token_lista.append([tokens, self.lexem(lexema), fila, columna, self.token(self.lexem(lexema))])
                         estado = 3
                     else:
                         print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
@@ -130,7 +166,9 @@ class Automata:
                         continue
                     
                 elif estado == 3:
-                    # padre.append(lexema)
+                    # print(lexema, fila, columna)
+                    # tokens += 1
+                    # token_lista.append([tokens, self.lexem(lexema), fila, columna, self.token(self.lexem(lexema))])
                     if ord(caracter) >= 65 and ord(caracter) <= 122:#es letra
                         estado = 4
                     elif ord(caracter) >= 48 and ord(caracter) <=57:#es digito
@@ -270,13 +308,20 @@ class Automata:
                 lexema = ''
                 
             elif estado == 0 or estado == 4 or estado == 3:
+                # if estado == 3:
+                    # print(lexema)
+                    # tokens += 1
+                    # token_lista.append([tokens, self.lexem(lexema), fila, columna, self.token(self.lexem(lexema))])
                 continue
 
             # elif estado == -1:
                 
             else:
                 print('Cadena inválida: '+lexema+'\n'+"Estado: "+str(estado))
+
         if not error_lista == []:
             Graficador.Graficador().reportar(error_lista)
+        if not token_lista == []:
+            Graficador.Graficador().tokens(token_lista)
             # estado = 0
             # lexema = ''

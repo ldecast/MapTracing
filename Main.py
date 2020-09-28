@@ -19,12 +19,12 @@ class Main:
         #fichero = input("Ingrese la ruta del archivo '.txt'----> ")
         fichero = "C:\\Users\\luisd\\Desktop\\hola.txt"
         if opcion=="1":
-            print("\n")
+            # print("\n")
             Automata.Automata().aceptar(fichero)
         elif opcion=="2":
             print("\n")
-            #eInicio = input("Estación inicio: ")
-            #eFinal = input("Estación final: ")
+            eInicio = input("Estación inicio: ")
+            eFinal = input("Estación final: ")
             
         elif opcion=="3":
             print("\n")
