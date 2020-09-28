@@ -1,8 +1,7 @@
 import Automata
-
 class Main:
     from os import system
-    def __init__(self):
+    def __init__(self, init):
         self.system('cls')
         print("                  ---------------------------------------------------")
         print("                  | Lenguajes formales y de programación Sección A- |\n                  | Luis Danniel Ernesto Castellanos Galindo        |\n                  | Carnet: 201902238                               |\n                  |                   MapTracing                    |")
@@ -12,19 +11,34 @@ class Main:
         print("2. Graficar Ruta")
         print("3. Graficar Mapa")
         print("4. Salir")
-        opcion = input("Ingrese una opción: ")
-        self.inicio(opcion)
+        opcion = input("\nIngrese una opción: ")
+        self.inicio(opcion,init)
     
-    def inicio(self,opcion):
+    def inicio(self,opcion,init):
         #fichero = input("Ingrese la ruta del archivo '.txt'----> ")
         fichero = "C:\\Users\\luisd\\Desktop\\hola.txt"
         if opcion=="1":
-            # print("\n")
-            Automata.Automata().aceptar(fichero)
+            print("\nLeyendo: ---"+fichero+"---\n")
+            aceptacion = Automata.Automata().aceptar(fichero, None, None)
+            if aceptacion == False:
+                print("El archivo seleccionado no se encuentra. Intente de nuevo.")
+                input("Presione Enter para continuar...")
+                Main(None)
+            else:
+                input("Presione Enter para continuar...")
+                Main(aceptacion)
+
         elif opcion=="2":
-            print("\n")
-            eInicio = input("Estación inicio: ")
-            eFinal = input("Estación final: ")
+            if init == None:
+                print("No se ha leído ningún archivo.")
+                input("Presione Enter para continuar e ingrese una entrada: ")
+                Main(None)
+            else:
+                print("\n")
+                eInicio = input("Estación inicio: ")
+                eFinal = input("Estación final: ")
+                Automata.Automata().aceptar(init,eInicio,eFinal)
+                
             
         elif opcion=="3":
             print("\n")
@@ -36,6 +50,6 @@ class Main:
             exit()
         else:
             opcion = input("Seleccione una opción valida [1-4]: ")
-            self.inicio(opcion)
+            self.inicio(opcion,init)
         
-run=Main()
+run=Main(None)
