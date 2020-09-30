@@ -1,128 +1,21 @@
-import csv
 import os
 
 class Graficador:
 
-    def reportar(self, datos):
-        errores = ["No.","Fila","Columna","Caracter","Descripcion"]
-        datos.insert(0,errores)
-        csv_file = open('Lista de errores.csv', 'w', newline='', encoding="utf-8")
-        with csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerows(datos)
-        print("Reporte de errores generado!")
-    
-    def tokens(self, datos):
-        encabezado = ["No.","Lexema","Fila","Columna","Token"]
-        datos.insert(0,encabezado)
-        csv_file = open('Lista de tokens.csv', 'w', newline='', encoding="utf-8")
-        with csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerows(datos)    
-        print("Reporte de tokens generado!")
-
-    # def get_estacion(self, lista, indice):
-    #     a = 0
-    #     f = None
-    #     try:
-    #         while a < 4:
-    #             a += 1
-    #             if 'estacion' in lista[indice].lower():
-    #                 f = lista[indice].lower()
-    #                 break
-    #             else:
-    #                 indice += 1
-    #         return f
-    #     except IndexError:
-    #         return None
-    # def get_estado(self, lista, indice):
-    #     a = 0
-    #     f = None
-    #     try:
-    #         while a < 4:
-    #             a += 1
-    #             if 'disponible' in lista[indice].lower() or 'cerrad' in lista[indice].lower():
-    #                 f = lista[indice].lower()
-    #                 break
-    #             else:
-    #                 indice += 1
-    #         return f
-    #     except IndexError:
-    #         return None
-    # def get_color(self, lista, indice):
-    #     a = 0
-    #     f = None
-    #     try:
-    #         while a < 4:
-    #             a += 1
-    #             if '#' in lista[indice]:
-    #                 f = lista[indice]
-    #                 break
-    #             else:
-    #                 indice += 1
-    #         return f
-    #     except IndexError:
-    #         return None
-    
-    # def get_ruta(self, lista, indice):
-    #     a = 0
-    #     f = None
-    #     try:
-    #         while a < 5:
-    #             a += 1
-    #             if 'ruta' in lista[indice].lower():
-    #                 f = lista[indice].lower()
-    #                 break
-    #             else:
-    #                 indice += 1
-    #         return f
-    #     except IndexError:
-    #         return None
-    
-    # def get_peso(self, lista, indice):
-    #     a = 0
-    #     f = None
-    #     try:
-    #         while a < 5:
-    #             a += 1
-    #             if str(lista[indice]).isdigit() or '.' in lista[indice]:
-    #                 f = lista[indice]
-    #                 break
-    #             else:
-    #                 indice += 1
-    #         return f
-    #     except IndexError:
-    #         return None
-
-    # def get_inicio(self, lista, indice):
-    #     a = 0
-    #     f = None
-    #     try:
-    #         while a < 5:
-    #             a += 1
-    #             if 'estacion' in lista[indice].lower():
-    #                 f = lista[indice].lower()
-    #                 break
-    #             else:
-    #                 indice += 1
-    #         return f
-    #     except IndexError:
-    #         return None
-
-    # def get_fin(self, lista, indice):
-    #     a = 0
-    #     f = None
-    #     try:
-    #         while a < 5:
-    #             a += 1
-    #             if 'estacion' in lista[indice].lower():
-    #                 f = lista[indice].lower()
-    #                 break
-    #             else:
-    #                 indice += 1
-    #         return f
-    #     except IndexError:
-    #         return None
+    def get_nombre(self, lista, indice):
+        a = 0
+        f = None
+        try:
+            while a < 4:
+                a += 1
+                if 'nombre' in lista[indice].lower() and not 'estacion' in lista[indice].lower():
+                    f = lista[indice].lower()
+                    break
+                else:
+                    indice += 1
+            return f
+        except IndexError:
+            return None
 
     def get_estacion(self, lista, indice):
         a = 0
@@ -130,7 +23,7 @@ class Graficador:
         try:
             while a < 4:
                 a += 1
-                if 'estacion' in lista[indice].lower() and 'nombre' in lista[indice].lower():
+                if 'nombre' in lista[indice].lower() and not 'ruta' in lista[indice].lower():
                     f = lista[indice].lower()
                     break
                 else:
@@ -244,13 +137,16 @@ class Graficador:
         pass
         # print(lista_rutas)
 
-    def graficar_mapa(self, lista_rutas, lista_estaciones, eInicio, eFin):
+    def graficar_mapa(self, lista_rutas, lista_estaciones, eInicio, eFin, name):
         # print(lista_estaciones)
         # print(lista_rutas)
+        if name != '' and name != None:
+            titulo = self.limpiar(name)
+
         node = ''
         contenido = ''
+
         estacion = []
-        
         d = 0
         for x in range(len(lista_estaciones)):
             a = self.get_estacion(lista_estaciones,d)
@@ -262,7 +158,6 @@ class Graficador:
         # print(estacion)
 
         ruta = []
-        
         e = 0
         for y in range(len(lista_rutas)):
             a = self.get_ruta(lista_rutas,e)
@@ -274,8 +169,8 @@ class Graficador:
                 ruta.append([self.limpiar(a),self.limpiar(b),self.limpiar(c),self.limpiar(d)])
         # print(ruta)
 
-        match1 = ''
-        match2 = ''
+        # match1 = ''
+        # match2 = ''
 
         # for i in range(len(estacion)):
         #     for j in range(len(estacion[i])):
@@ -294,12 +189,15 @@ class Graficador:
 
         # if match1 != '' and match2 != '':
         #     self.ruta_rapida(match1,match2,directorio)
-        directorio = str(match1 + "-" + match2)+'.dot'
-        grafo = open(directorio,'w',encoding="utf-8")
+        directorio = str(eInicio + "-" + eFin)+'.dot'
+        grafo = open(directorio,'w',encoding="utf8")
         grafo.write('digraph D {\n')
         grafo.write("rankdir=\"LR\";\n")
+        grafo.write("splines=false;\n")
+        grafo.write("bgcolor=\"#abb2b9\";\n")
+        grafo.write("label=\"" + titulo + "\" fontname=\"Century Gothic\" labelloc=\"t\";\n")
         grafo.write("node[shape = \"ellipse\" style=filled fontname = \"Century Gothic\" color= \"#283747\"];\n")
-        grafo.write("edge[arrowhead=vee color=\"#a6acaf \" fontname=\"Sans-Serif\" fontsize=\"10\"];\n")
+        grafo.write("edge[arrowhead=vee color=\"#566573\" fontname=\"Sans-Serif\" fontsize=\"10\"];\n")
         for i in range(len(estacion)):
             for j in range(len(estacion[i])):
                 # print(estacion[i][j])

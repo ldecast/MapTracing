@@ -19,7 +19,7 @@ class Main:
         fichero = "C:\\Users\\luisd\\Desktop\\archivo.txt"
         if opcion=="1":
             print("\nLeyendo: ---"+fichero+"---\n")
-            aceptacion = Automata.Automata().aceptar(fichero, None, None)
+            aceptacion = Automata.Automata().aceptar(fichero, None, None, 0)
             if aceptacion == False:
                 print("El archivo seleccionado no se encuentra. Intente de nuevo.")
                 input("Presione Enter para continuar...")
@@ -38,7 +38,7 @@ class Main:
                 eInicio = input("Estación inicio: ")
                 eFinal = input("Estación final: ")
                 print("\nGenerando ruta de "+eInicio+" a "+eFinal+"...")
-                Automata.Automata().aceptar(init,eInicio,eFinal)
+                # Automata.Automata().aceptar(init,eInicio,eFinal,2)
                 input("Presione Enter para continuar...")
                 Main(init,eInicio,eFinal)
                 
@@ -54,6 +54,7 @@ class Main:
                 Main(init,None,None)
             elif init != None and inicio != None and fin != None:
                 print("\nGenerando mapa...")
+                Automata.Automata().aceptar(init,inicio,fin,3)
                 input("Presione Enter para continuar...")
                 Main(init,None,None)
             

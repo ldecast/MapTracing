@@ -1,6 +1,6 @@
-import Estacion
-import Ruta
+import Reportador
 import Graficador
+
 class Automata:
 
     def token(self, lexema):
@@ -21,109 +21,7 @@ class Automata:
             return 'estado'
         elif 'color' in a:
             return 'color'
-    
-    def get_estacion(self, lista, indice):
-        a = 0
-        f = None
-        try:
-            while a < 4:
-                a += 1
-                if 'estacion' in lista[indice].lower() and 'nombre' in lista[indice].lower():
-                    f = lista[indice].lower()
-                    break
-                else:
-                    indice += 1
-            return f
-        except IndexError:
-            return None
-    def get_estado(self, lista, indice):
-        a = 0
-        f = None
-        try:
-            while a < 4:
-                a += 1
-                if 'estado' in lista[indice].lower():
-                    f = lista[indice].lower()
-                    break
-                else:
-                    indice += 1
-            return f
-        except IndexError:
-            return None
-    def get_color(self, lista, indice):
-        a = 0
-        f = None
-        try:
-            while a < 4:
-                a += 1
-                if 'color' in lista[indice]:
-                    f = lista[indice]
-                    break
-                else:
-                    indice += 1
-            return f
-        except IndexError:
-            return None
-    
-    def get_ruta(self, lista, indice):
-        a = 0
-        f = None
-        try:
-            while a < 5:
-                a += 1
-                if 'ruta' in lista[indice].lower() and 'nombre' in lista[indice].lower():
-                    f = lista[indice].lower()
-                    break
-                else:
-                    indice += 1
-            return f
-        except IndexError:
-            return None
-    
-    def get_peso(self, lista, indice):
-        a = 0
-        f = None
-        try:
-            while a < 5:
-                a += 1
-                if 'peso' in lista[indice].lower():
-                    f = lista[indice]
-                    break
-                else:
-                    indice += 1
-            return f
-        except IndexError:
-            return None
 
-    def get_inicio(self, lista, indice):
-        a = 0
-        f = None
-        try:
-            while a < 5:
-                a += 1
-                if 'inicio' in lista[indice].lower():
-                    f = lista[indice].lower()
-                    break
-                else:
-                    indice += 1
-            return f
-        except IndexError:
-            return None
-
-    def get_fin(self, lista, indice):
-        a = 0
-        f = None
-        try:
-            while a < 5:
-                a += 1
-                if 'fin' in lista[indice].lower():
-                    f = lista[indice].lower()
-                    break
-                else:
-                    indice += 1
-            return f
-        except IndexError:
-            return None
     
     def get_lexema(self, lexema):
         if lexema.count('>') > 1:
@@ -135,36 +33,21 @@ class Automata:
             a = lexema[lexema.index('<')+1:lexema.index('>')]
             return a
 
-    def get_padre(self, lexema):
-        # print(lexema)
-        if lexema.count('>') == 3:
-            a = [idx for idx, x in enumerate(lexema) if x=='>']
-            b = [idx for idx, x in enumerate(lexema) if x=='<']
-            c = lexema[a.pop(1)+1:b.pop(2)]
-            return c
-        if lexema.count('>') == 2:
-            a = [idx for idx, x in enumerate(lexema) if x=='>']
-            b = [idx for idx, x in enumerate(lexema) if x=='<']
-            c = lexema[a.pop(0)+1:b.pop(1)]
-            return c
-        # elif lexema.count('>') == 1:
-            # a = lexema[lexema.index('<')+1:lexema.index('>')]
-            
 
-    def aceptar(self, entrada, estacion_inicio, estacion_final):
+    def aceptar(self, entrada, estacion_inicio, estacion_final, opcion):
         
         try:
-            file = open(entrada, 'r', encoding= "utf8") 
+            file = open(entrada, 'r', encoding= "utf-8-sig") 
             fila = 0
             columna = 0
             aux_col = 0
+            nombre = ""
             lexema = ""
             estado = 0
             tokens = 0
             token_lista = []
             errores = 0
             error_lista = []
-            # tipoPadre = ""
             rutas = []
             estaciones = []
 
@@ -186,11 +69,14 @@ class Automata:
                     if estado == 0:
                         if caracter == "<":
                             estado = 1
+                        elif caracter == "":
+                            continue
                         else:
                             errores +=1
                             # print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
                             estado = 0
+                            lexema = lexema.replace(caracter,'')
                             continue
                     
                     elif estado == 1:
@@ -204,6 +90,7 @@ class Automata:
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
                             # print("Fila: "+str(fila) + " Columna: " + str(columna) + " Caracter: " + caracter)
                             estado = 1
+                            lexema = lexema.replace(caracter,'')
                             continue
                         
                     elif estado == 2:
@@ -224,6 +111,7 @@ class Automata:
                             errores +=1
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
                             estado = 2
+                            lexema = lexema.replace(caracter,'')
                             continue
                         
                     elif estado == 3:
@@ -254,14 +142,18 @@ class Automata:
                             estado = 4
                         elif caracter == '_':
                             estado = 4
+                        elif caracter == '@':
+                            estado = 4
+                        elif caracter == '#':
+                            estado = 4
                         elif caracter == "<":
-
                             estado = 9
                         else:
                             ###print("Fila: "+str(fila) + " Columna: " + str(columna) +  " Caracter: " + caracter)
                             errores +=1
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
                             estado = 4
+                            lexema = lexema.replace(caracter,'')
                             continue
                     
                     elif estado == 5:
@@ -276,6 +168,7 @@ class Automata:
                             errores +=1
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
                             estado = 5
+                            lexema = lexema.replace(caracter,'')
                             continue
                     
                     elif estado == 6:
@@ -288,6 +181,7 @@ class Automata:
                             errores +=1
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
                             estado = 6
+                            lexema = lexema.replace(caracter,'')
                             continue
                     
                     elif estado == 7:
@@ -300,6 +194,7 @@ class Automata:
                             errores +=1
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
                             estado = 7
+                            lexema = lexema.replace(caracter,'')
                             continue
                     
                     elif estado == 8:
@@ -314,6 +209,7 @@ class Automata:
                             errores +=1
                             estado = 8
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                            lexema = lexema.replace(caracter,'')
                             continue
                     
                     elif estado == 9:
@@ -324,6 +220,7 @@ class Automata:
                             errores +=1
                             estado = 9
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                            lexema = lexema.replace(caracter,'')
                             continue
 
                     elif estado == 10:
@@ -334,6 +231,7 @@ class Automata:
                             errores +=1
                             estado = 10
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
+                            lexema = lexema.replace(caracter,'')
                             continue            
 
                     elif estado == 11:
@@ -352,6 +250,7 @@ class Automata:
                             errores +=1
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
                             estado = 11
+                            lexema = lexema.replace(caracter,'')
                             continue 
                     
                     elif estado == 12:
@@ -363,52 +262,30 @@ class Automata:
                             errores +=1
                             error_lista.append([errores,fila,columna,caracter,"Desconocido"])
                             estado = 12
+                            lexema = lexema.replace(caracter,'')
                             continue 
 
                     
                 if estado == 12:# or estado == 3 or estado == 4 or estado == 5 or estado == 7: #saber si la cadena es valida
-                    # if estado == 12:
                     print("CADENA ACEPTADA: " +lexema)
                     a = lexema.lower()
                     count = 0
                     count2 = 0
-                    nombre_ruta = ''
-                    peso = ''
-                    inicio = ''
-                    fin = ''
-                    nombre_estacion = ''
-                    estado_estacion = ''
-                    color = ''
-                    # if 'ruta' in lexema and 'nombre' in a:
-                    #     nombre_ruta = lexema
-                    # elif 'peso' in a:
-                    #     peso = lexema
-                    # elif 'inicio' in a:
-                    #     inicio = lexema
-                    # elif 'fin' in a:
-                    #     fin = lexema
-                    # elif 'estacion' in a and 'nombre' in a:
-                    #     nombre_estacion = lexema
-                    # elif 'estado' in a:
-                    #     estado_estacion = lexema
-                    # elif 'color' in a:
-                    #     color = lexema
                     if a.count('<')>1 and 'ruta' in a or 'peso' in a or 'inicio' in a or 'fin' in a:
                         count += 1
                         rutas.append(lexema)
                     if a.count('<')>1 and 'estacion' in a and 'nombre' in a or 'estado' in a or 'color' in a:
                         estaciones.append(lexema)
                         count2 += 1
+                    if a.count('<')>1 and 'nombre' in a and not 'estacion' in a:
+                        nombre = lexema
                     # print('')
                     estado = 0
                     lexema = ''
                     # print(rutas)
                     
                 elif estado == 0 or estado == 4 or estado == 3 or estado == 6 or estado == 8:
-                    # if estado == 3:
-                        # print(lexema)
-                        # tokens += 1
-                        # token_lista.append([tokens, self.lexem(lexema), fila, columna, self.token(self.lexem(lexema))])
+                    
                     continue
 
                 # elif estado == -1:
@@ -416,20 +293,23 @@ class Automata:
                 else:
                     print('Cadena inválida: '+lexema+'\n'+"Estado: "+str(estado))
 
-            # if error_lista != [] and estacion_inicio == None and estacion_final == None:
-            #     Graficador.Graficador().reportar(error_lista)
-            # if token_lista != [] and estacion_inicio == None and estacion_final == None:
-            #     Graficador.Graficador().tokens(token_lista)
+
+
+            if error_lista != [] and estacion_inicio == None and estacion_final == None:
+                Reportador.Reportador().error(error_lista)
+            if token_lista != [] and estacion_inicio == None and estacion_final == None:
+                Reportador.Reportador().tokens(token_lista)
             
-            # lista_rutas = rutas
-            # lista_estaciones = estaciones
-            # print(rutas)
-            # print(estaciones)
+            
 
             if estacion_inicio != None and estacion_final != None:
-                Graficador.Graficador().graficar_ruta(rutas,estaciones,estacion_inicio, estacion_final)
-                Graficador.Graficador().graficar_mapa(rutas,estaciones,estacion_inicio, estacion_final)
+                if opcion == 2:
+                    Graficador.Graficador().graficar_ruta(rutas,estaciones,estacion_inicio,estacion_final)
+                elif opcion == 3:
+                    Graficador.Graficador().graficar_mapa(rutas,estaciones,estacion_inicio,estacion_final,nombre)
             
+
+            file.close()
             return entrada
 
         except FileNotFoundError:
