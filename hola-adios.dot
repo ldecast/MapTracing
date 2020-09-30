@@ -1,0 +1,12 @@
+digraph D {
+rankdir="LR";
+node[shape = "ellipse" style=filled fontname = "Century Gothic" color= "#283747"];
+edge[arrowhead=vee color="#a6acaf " fontname="Sans-Serif" fontsize="10"];
+estacionzona6[label = "estacionzona6\ndisponible"  fillcolor="#1A5AAF"];
+estacionzona2[label = "estacionzona2\ndisponible"  fillcolor="#AF5B1A"];
+estacionzona1[label = "estacionzona1\ndisponible"  fillcolor="#E52E22"];
+estacionzona1->estacionzona6[label = "ruta_central\n2.5"]
+estacionzona6->estacionzona2[label = "ruta_central2\n4"]
+estacionzona2->estacionzona1[label = "rutaexpress\n0.7"]
+estacionzona6->estacionzona1[label = "ruta2\n5"]
+}

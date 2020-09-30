@@ -1,0 +1,13 @@
+digraph regexp {
+rankdir=LR;
+node[shape = "ellipse" style=filled fontname = "Century Gothic" color= green];
+edge[arrowhead = vee color = "#a6acaf " fontname = "Sans-Serif" fontsize="10"];
+0[ fillcolor="#2471a3" label = "hola" ];
+1[label = "hola\nadios"][fillcolor=yellow]2[label = "hola"][fillcolor=red]3[label = "hola" color= "#283747" fillcolor="#2471a3"];
+0->1[color = "#515a5a" label="a    "]
+1->2
+2->3
+4[label = "jeje"]
+4[fillcolor = orange]
+0->1[color = "black" ]
+}
