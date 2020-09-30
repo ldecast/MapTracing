@@ -38,7 +38,7 @@ class Main:
                 eInicio = input("Estación inicio: ")
                 eFinal = input("Estación final: ")
                 print("\nGenerando ruta de "+eInicio+" a "+eFinal+"...")
-                # Automata.Automata().aceptar(init,eInicio,eFinal,2)
+                Automata.Automata().aceptar(init,eInicio,eFinal,2)
                 input("Presione Enter para continuar...")
                 Main(init,eInicio,eFinal)
                 

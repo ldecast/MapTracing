@@ -267,7 +267,7 @@ class Automata:
 
                     
                 if estado == 12:# or estado == 3 or estado == 4 or estado == 5 or estado == 7: #saber si la cadena es valida
-                    print("CADENA ACEPTADA: " +lexema)
+                    # print("CADENA ACEPTADA: " +lexema)
                     a = lexema.lower()
                     count = 0
                     count2 = 0
@@ -296,9 +296,9 @@ class Automata:
 
 
             if error_lista != [] and estacion_inicio == None and estacion_final == None:
-                Reportador.Reportador().error(error_lista)
+                Reportador.Reportador().error(error_lista, entrada[entrada.rfind('\\')+1:entrada.index('.')])
             if token_lista != [] and estacion_inicio == None and estacion_final == None:
-                Reportador.Reportador().tokens(token_lista)
+                Reportador.Reportador().tokens(token_lista, entrada[entrada.rfind('\\')+1:entrada.index('.')])
             
             
 
