@@ -134,8 +134,100 @@ class Graficador:
             return c
     
     def graficar_ruta(self, lista_rutas, lista_estaciones, eInicio, eFin):
-        pass
-        # print(lista_rutas)
+        node = ''
+        contenido = ''
+
+        estacion = []
+        d = 0
+        for x in range(len(lista_estaciones)):
+            a = self.get_estacion(lista_estaciones,d)
+            b = self.get_estado(lista_estaciones,d)
+            c = self.get_color(lista_estaciones,d)
+            d += 3
+            if a!=None and b!=None and c!=None:
+                estacion.append([self.limpiar(a),self.limpiar(b),self.limpiar(c)])
+
+        ruta = []
+        e = 0
+        for y in range(len(lista_rutas)):
+            a = self.get_ruta(lista_rutas,e)
+            b = self.get_peso(lista_rutas,e)
+            c = self.get_inicio(lista_rutas,e)
+            d = self.get_fin(lista_rutas,e)
+            e += 4
+            if a!=None and b!=None and c!=None and d!=None:
+                ruta.append([self.limpiar(a),self.limpiar(b),self.limpiar(c),self.limpiar(d)])
+
+        match1 = ''
+        match2 = ''
+
+        for i in range(len(estacion)):
+            for j in range(len(estacion[i])):
+                if eInicio == estacion[i][j]:
+                    match1 = estacion[i][j]
+        
+        for i in range(len(estacion)):
+            for j in range(len(estacion[i])):
+                if eFin == estacion[i][j]:
+                    match2 = estacion[i][j]
+        
+
+        if match1 != "" and match2 != "":
+
+            directorio = str("Ruta " + eInicio + "-" + eFin)+'.dot'
+            grafo = open(directorio,'w',encoding="utf8")
+            grafo.write('digraph D {\n')
+            grafo.write("rankdir=\"LR\";\n")
+            grafo.write("splines=false;\n")
+            grafo.write("bgcolor=\"#abb2b9\";\n")
+            grafo.write("node[shape = \"ellipse\" style=filled fontname = \"Century Gothic\" color= \"#283747\"];\n")
+            grafo.write("edge[arrowhead=vee color=\"#566573\" fontname=\"Sans-Serif\" fontsize=\"10\" penwidth=\"0.35\"];\n")
+            for i in range(len(estacion)):
+                for j in range(len(estacion[i])):
+                    if eInicio == estacion[i][j]:
+                        match1 = estacion[i][j]
+                    if eFin == estacion[i][j]:
+                        match2 = estacion[i][j]
+                    if 'estacion' in estacion[i][j] and contenido == '':
+                        node = estacion[i][j]
+                        contenido = str(node) + '[label = \"'+estacion[i][j]
+                    elif 'disponible' in estacion[i][j] or 'cerrad' in estacion[i][j] and contenido != '':
+                        contenido = contenido + "\\n"+estacion[i][j]+"\""
+                    elif '#' in estacion[i][j] and contenido != '':
+                        contenido = contenido + "  fillcolor=\""+ estacion[i][j] +"\"];\n"
+                grafo.write(contenido)
+                contenido = ''
+            recorrido = ''
+            flecha = ''
+            peso = ''
+            for k in range(len(ruta)):
+                for l in range(len(ruta[k])):
+                    if 'ruta' in ruta[k][l]:
+                        flecha = ruta[k][l]
+                    if '.' in ruta[k][l] or ruta[k][l].isdigit():
+                        peso = ruta[k][l]
+                    if 'estacion' in ruta[k][l] and recorrido != '':
+                        recorrido = recorrido + "->" + ruta[k][l]
+                    if 'estacion' in ruta[k][l] and recorrido=='':
+                        recorrido = ruta[k][l]
+                recorrido = recorrido + "[label = \""+ flecha + "\\n" + peso +"\"]\n"
+                grafo.write(recorrido)
+                recorrido = ''
+
+
+            grafo.write('}')
+            grafo.close()
+
+            self.ruta_rapida(match1,match2,directorio)
+            
+            self.revisar(directorio)
+            
+            pre = directorio[:directorio.index('.dot')]
+            os.system('dot -Tpdf \"'+directorio+'\" -o \"Ruta ['+pre+'].pdf\"')
+            os.startfile('\"Ruta ['+pre+'].pdf\"')
+        
+        else:
+            return False
 
     def graficar_mapa(self, lista_rutas, lista_estaciones, eInicio, eFin, name):
         # print(lista_estaciones)
@@ -148,7 +240,6 @@ class Graficador:
 
         estacion = []
         d = 0
-        z = ''
         for x in range(len(lista_estaciones)):
             a = self.get_estacion(lista_estaciones,d)
             b = self.get_estado(lista_estaciones,d)
@@ -188,7 +279,7 @@ class Graficador:
 
         if match1 != "" and match2 != "":
 
-            directorio = str(eInicio + "-" + eFin)+'.dot'
+            directorio = str("Mapa " + eInicio + "-" + eFin)+'.dot'
             grafo = open(directorio,'w',encoding="utf8")
             grafo.write('digraph D {\n')
             grafo.write("rankdir=\"LR\";\n")
@@ -214,18 +305,15 @@ class Graficador:
                 grafo.write(contenido)
                 # print(contenido)
                 contenido = ''
-            rutas_posibles = []
-            posible = False
+            # rutas_posibles = []
             recorrido = ''
             flecha = ''
             peso = ''
-            # hola = []
             for k in range(len(ruta)):
                 for l in range(len(ruta[k])):
                     # print(ruta[k][l])
-                    if eInicio == ruta[k][l]:
-                        posible = True
-                        rutas_posibles.append(k)
+                    # if eInicio == ruta[k][l]:
+                    #     rutas_posibles.append(k)
                     if 'ruta' in ruta[k][l]:
                         flecha = ruta[k][l]
                     if '.' in ruta[k][l] or ruta[k][l].isdigit():
@@ -236,23 +324,14 @@ class Graficador:
                         recorrido = ruta[k][l]
                 recorrido = recorrido + "[label = \""+ flecha + "\\n" + peso +"\"]\n"
                 grafo.write(recorrido)
-                # hola.append(recorrido)
                 recorrido = ''
             # print(hola)
-            
-            # if posible != False:
-            #     # rutas_posibles.append(posible)
-            #     print(rutas_posibles)
-            #     for k in rutas_posibles:
-            #         for l in range(len(ruta[k])):
-            #             print(ruta[k][l])
 
             grafo.write('}')
             grafo.close()
 
             self.ruta_rapida(match1,match2,directorio)
                     
-            
             pre = directorio[:directorio.index('.dot')]
             os.system('dot -Tpdf \"'+directorio+'\" -o \"Mapa ['+pre+'].pdf\"')
             os.startfile('\"Mapa ['+pre+'].pdf\"')
@@ -316,7 +395,6 @@ class Graficador:
     def sobre_escribir(self,dot,ruta_vieja,ruta_nueva):
         reader = open(dot,'r')
         lineas = []
-        # new = []
         for linea in reader.readlines():
             if not ruta_vieja in linea:
                 lineas.append(linea)
@@ -328,3 +406,34 @@ class Graficador:
         for dato in lineas:
             writer.write(dato)
         writer.close()
+
+    def revisar(self, directorio):
+        reader = open(directorio,'r')
+        lineas = []
+        for linea in reader.readlines():
+            if 'color=\"#196f3d\"' in linea:
+                lineas.append(linea[:linea.index('-')])
+                lineas.append(linea[linea.index('>')+1:linea.index('[')])
+        reader.close()
+        h = list(set(lineas))
+
+        reader2 = open(directorio,'r')
+        x = []
+        for y in reader2.readlines():
+            for new in h:
+                if new in y and 'color=' in y:
+                    x.append(y)
+        reader2.close()
+        z = list(set(x))
+
+        grafo = open(directorio, 'w')
+        grafo.write('digraph D {\n')
+        grafo.write("rankdir=\"LR\";\n")
+        grafo.write("splines=false;\n")
+        grafo.write("bgcolor=\"#abb2b9\";\n")
+        grafo.write("node[shape = \"ellipse\" style=filled fontname = \"Century Gothic\" color= \"#283747\"];\n")
+        grafo.write("edge[arrowhead=vee color=\"#566573\" fontname=\"Sans-Serif\" fontsize=\"10\" penwidth=\"0.35\"];\n")
+        for dato in z:
+            grafo.write(dato)
+        grafo.write('}')
+        grafo.close()

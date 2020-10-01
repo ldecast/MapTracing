@@ -125,9 +125,40 @@ def sobre_escribir(dot,ruta_vieja,ruta_nueva):
         writer.write(dato)
     writer.close()
 
+def revisar():
+    reader = open('ok-ok.dot','r')
+    lineas = []
+    for linea in reader.readlines():
+        if 'color=\"#196f3d\"' in linea:
+            lineas.append(linea[:linea.index('-')])
+            lineas.append(linea[linea.index('>')+1:linea.index('[')])
+    reader.close()
+    h = list(set(lineas))
 
+    reader2 = open('ok-ok.dot','r')
+    x = []
+    for y in reader2.readlines():
+        for new in h:
+            if new in y and 'color=' in y:
+                x.append(y)
+                print(y)
+    reader2.close()
+    z = list(set(x))
 
+    grafo = open('ok-ok.dot', 'w')
+    grafo.write('digraph D {\n')
+    grafo.write("rankdir=\"LR\";\n")
+    grafo.write("splines=false;\n")
+    grafo.write("bgcolor=\"#abb2b9\";\n")
+    grafo.write("node[shape = \"ellipse\" style=filled fontname = \"Century Gothic\" color= \"#283747\"];\n")
+    grafo.write("edge[arrowhead=vee color=\"#566573\" fontname=\"Sans-Serif\" fontsize=\"10\" penwidth=\"0.35\"];\n")
+    for dato in z:
+        # print(dato)
+        grafo.write(dato)
+    grafo.write('}')
+    grafo.close()
 
+# revisar()
 
 def evaluar(linea, inicio, fin,dot):
     # print(inicio)
@@ -146,19 +177,19 @@ def evaluar(linea, inicio, fin,dot):
         # elif str(inicio+'->'+fin) in dato:
 
             # print(peso)
-    # fast = min(peso)
-    # print(fast)
+    fast = min(peso)
+    print(fast)
 
- #   # for dato in linea:
-    #     # print(dato,'dato')
-    #     if str(fast) == dato[dato.rfind('\\n')+2:dato.rfind('"')]:
-    #         nuevo_inicio = dato[dato.index('>')+1:dato.index('[')]
-    #         ruta_vieja = dato
- #   #         ruta_pintar = dato.replace(']',' penwidth="2" color=\"green\"]')
+    for dato in linea:
+        print(dato,'dato')
+        if str(fast) == dato[dato.rfind('\\n')+2:dato.rfind('"')]:
+            nuevo_inicio = dato[dato.index('>')+1:dato.index('[')]
+            ruta_vieja = dato
+            ruta_pintar = dato.replace(']',' penwidth="2" color=\"green\"]')
     print(intento2,"jeje")
     # if nuevo_inicio != fin:
     ruta_rapida(intento2,fin,dot)
-    # sobre_escribir(dot,ruta_vieja,ruta_pintar)
+    sobre_escribir(dot,ruta_vieja,ruta_pintar)
 
     
 
@@ -174,19 +205,19 @@ def ruta_rapida(inicio, fin, dot):
     #         aux_posibles.append(linea[:linea.index('[')])
     cerradas = []
     done = False
-    for a in inicio:
-        for linea in reader.readlines():
-            if 'cerrad' in linea:
-                cerradas.append(linea[:linea.index('[')])
-            if a == fin:
-                done = True
-                print("llego a su destino",a)
-                break
-            if str(a+'->'+fin) in linea:
-                aux_posibles.append(linea)
-                
-            elif str(a+'->') in linea:
-                rutas_posibles.append(linea)
+    # for a in inicio:
+    for linea in reader.readlines():
+        if 'cerrad' in linea:
+            cerradas.append(linea[:linea.index('[')])
+        if inicio == fin:
+            done = True
+            print("llego inicio su destino",inicio)
+            break
+        if str(inicio+'->'+fin) in linea:
+            aux_posibles.append(linea)
+            
+        elif str(inicio+'->') in linea:
+            rutas_posibles.append(linea)
         
             
         # elif str('->'+fin) in linea:
@@ -215,4 +246,4 @@ def ruta_rapida(inicio, fin, dot):
     if done == False:
         evaluar(rutas_posibles,inicio,fin,dot)
 
-ruta_rapida(['estacionzona6'],'estacionzona5','ok-ok.dot')
+ruta_rapida('estacionzona6','estacionzona5','ok-ok.dot')
