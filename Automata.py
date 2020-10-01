@@ -94,7 +94,6 @@ class Automata:
                             continue
                         
                     elif estado == 2:
-                        
                         if ord(caracter) >= 65 and ord(caracter) <= 122:#es letra
                             estado = 2
                         elif ord(caracter) >= 48 and ord(caracter) <=57:#es digito
@@ -115,9 +114,6 @@ class Automata:
                             continue
                         
                     elif estado == 3:
-                        # print(lexema)
-                        # tokens += 1
-                        # token_lista.append([tokens, self.lexem(lexema), fila, columna, self.token(self.lexem(lexema))])
                         if ord(caracter) >= 65 and ord(caracter) <= 122:#es letra
                             estado = 4
                         elif ord(caracter) >= 48 and ord(caracter) <=57:#es digito

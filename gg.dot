@@ -9,5 +9,6 @@ edge[arrowhead = vee color = "#a6acaf " fontname = "Sans-Serif" fontsize="10"];
 2->3
 4[label = "jeje"]
 4[fillcolor = orange]
-0->1[color = "black" ]
+0->1[penwidth="" color="green"]
+
 }

@@ -148,6 +148,7 @@ class Graficador:
 
         estacion = []
         d = 0
+        z = ''
         for x in range(len(lista_estaciones)):
             a = self.get_estacion(lista_estaciones,d)
             b = self.get_estado(lista_estaciones,d)
@@ -169,112 +170,161 @@ class Graficador:
                 ruta.append([self.limpiar(a),self.limpiar(b),self.limpiar(c),self.limpiar(d)])
         # print(ruta)
 
-        # match1 = ''
-        # match2 = ''
+        match1 = ''
+        match2 = ''
 
-        # for i in range(len(estacion)):
-        #     for j in range(len(estacion[i])):
-        #         # print(estacion[i][j])
-        #         if eInicio == estacion[i][j]:
-        #             match1 = estacion[i][j]
-        
-        # for i in range(len(estacion)):
-        #     for j in range(len(estacion[i])):
-        #         # print(estacion[i][j])
-        #         if eFin == estacion[i][j]:
-        #             match2 = estacion[i][j]
-        
-
-        
-
-        # if match1 != '' and match2 != '':
-        #     self.ruta_rapida(match1,match2,directorio)
-        directorio = str(eInicio + "-" + eFin)+'.dot'
-        grafo = open(directorio,'w',encoding="utf8")
-        grafo.write('digraph D {\n')
-        grafo.write("rankdir=\"LR\";\n")
-        grafo.write("splines=false;\n")
-        grafo.write("bgcolor=\"#abb2b9\";\n")
-        grafo.write("label=\"" + titulo + "\" fontname=\"Century Gothic\" labelloc=\"t\";\n")
-        grafo.write("node[shape = \"ellipse\" style=filled fontname = \"Century Gothic\" color= \"#283747\"];\n")
-        grafo.write("edge[arrowhead=vee color=\"#566573\" fontname=\"Sans-Serif\" fontsize=\"10\"];\n")
         for i in range(len(estacion)):
             for j in range(len(estacion[i])):
                 # print(estacion[i][j])
                 if eInicio == estacion[i][j]:
                     match1 = estacion[i][j]
+        
+        for i in range(len(estacion)):
+            for j in range(len(estacion[i])):
+                # print(estacion[i][j])
                 if eFin == estacion[i][j]:
                     match2 = estacion[i][j]
-                if 'estacion' in estacion[i][j] and contenido == '':
-                    node = estacion[i][j]
-                    contenido = str(node) + '[label = \"'+estacion[i][j]
-                elif 'disponible' in estacion[i][j] or 'cerrad' in estacion[i][j] and contenido != '':
-                    contenido = contenido + "\\n"+estacion[i][j]+"\""
-                elif '#' in estacion[i][j] and contenido != '':
-                    contenido = contenido + "  fillcolor=\""+ estacion[i][j] +"\"];\n"
-            grafo.write(contenido)
-            # print(contenido)
-            contenido = ''
-        rutas_posibles = []
-        posible = False
-        recorrido = ''
-        flecha = ''
-        peso = ''
-        hola = []
-        for k in range(len(ruta)):
-            for l in range(len(ruta[k])):
-                # print(ruta[k][l])
-                if eInicio == ruta[k][l]:
-                    posible = True
-                    rutas_posibles.append(k)
-                if 'ruta' in ruta[k][l]:
-                    flecha = ruta[k][l]
-                if '.' in ruta[k][l] or ruta[k][l].isdigit():
-                    peso = ruta[k][l]
-                if 'estacion' in ruta[k][l] and recorrido != '':
-                    recorrido = recorrido + "->" + ruta[k][l]
-                if 'estacion' in ruta[k][l] and recorrido=='':
-                    recorrido = ruta[k][l]
-            recorrido = recorrido + "[label = \""+ flecha + "\\n" + peso +"\"]\n"
-            grafo.write(recorrido)
-            # hola.append(recorrido)
-            recorrido = ''
-        # print(hola)
         
-        # if posible != False:
-        #     # rutas_posibles.append(posible)
-        #     print(rutas_posibles)
-        #     for k in rutas_posibles:
-        #         for l in range(len(ruta[k])):
-        #             print(ruta[k][l])
 
+        if match1 != "" and match2 != "":
 
+            directorio = str(eInicio + "-" + eFin)+'.dot'
+            grafo = open(directorio,'w',encoding="utf8")
+            grafo.write('digraph D {\n')
+            grafo.write("rankdir=\"LR\";\n")
+            grafo.write("splines=false;\n")
+            grafo.write("bgcolor=\"#abb2b9\";\n")
+            grafo.write("label=\"" + titulo + "\" fontname=\"Century Gothic\" labelloc=\"t\";\n")
+            grafo.write("node[shape = \"ellipse\" style=filled fontname = \"Century Gothic\" color= \"#283747\"];\n")
+            grafo.write("edge[arrowhead=vee color=\"#566573\" fontname=\"Sans-Serif\" fontsize=\"10\" penwidth=\"0.35\"];\n")
+            for i in range(len(estacion)):
+                for j in range(len(estacion[i])):
+                    # print(estacion[i][j])
+                    if eInicio == estacion[i][j]:
+                        match1 = estacion[i][j]
+                    if eFin == estacion[i][j]:
+                        match2 = estacion[i][j]
+                    if 'estacion' in estacion[i][j] and contenido == '':
+                        node = estacion[i][j]
+                        contenido = str(node) + '[label = \"'+estacion[i][j]
+                    elif 'disponible' in estacion[i][j] or 'cerrad' in estacion[i][j] and contenido != '':
+                        contenido = contenido + "\\n"+estacion[i][j]+"\""
+                    elif '#' in estacion[i][j] and contenido != '':
+                        contenido = contenido + "  fillcolor=\""+ estacion[i][j] +"\"];\n"
+                grafo.write(contenido)
+                # print(contenido)
+                contenido = ''
+            rutas_posibles = []
+            posible = False
+            recorrido = ''
+            flecha = ''
+            peso = ''
+            # hola = []
+            for k in range(len(ruta)):
+                for l in range(len(ruta[k])):
+                    # print(ruta[k][l])
+                    if eInicio == ruta[k][l]:
+                        posible = True
+                        rutas_posibles.append(k)
+                    if 'ruta' in ruta[k][l]:
+                        flecha = ruta[k][l]
+                    if '.' in ruta[k][l] or ruta[k][l].isdigit():
+                        peso = ruta[k][l]
+                    if 'estacion' in ruta[k][l] and recorrido != '':
+                        recorrido = recorrido + "->" + ruta[k][l]
+                    if 'estacion' in ruta[k][l] and recorrido=='':
+                        recorrido = ruta[k][l]
+                recorrido = recorrido + "[label = \""+ flecha + "\\n" + peso +"\"]\n"
+                grafo.write(recorrido)
+                # hola.append(recorrido)
+                recorrido = ''
+            # print(hola)
+            
+            # if posible != False:
+            #     # rutas_posibles.append(posible)
+            #     print(rutas_posibles)
+            #     for k in rutas_posibles:
+            #         for l in range(len(ruta[k])):
+            #             print(ruta[k][l])
 
-                
-        grafo.write('}')
+            grafo.write('}')
+            grafo.close()
 
-        grafo.close()
-        pre = directorio[:directorio.index('.dot')]
-        os.system('dot -Tpdf \"'+directorio+'\" -o \"Mapa ['+pre+'].pdf\"')
-        os.startfile('\"Mapa ['+pre+'].pdf\"')
+            self.ruta_rapida(match1,match2,directorio)
+                    
+            
+            pre = directorio[:directorio.index('.dot')]
+            os.system('dot -Tpdf \"'+directorio+'\" -o \"Mapa ['+pre+'].pdf\"')
+            os.startfile('\"Mapa ['+pre+'].pdf\"')
+        
+        else:
+            return False
     
     def ruta_rapida(self, inicio, fin, dot):
         reader = open(dot,'r')
         rutas_posibles = []
-        aux_posibles = []
+        cerradas = []
+        done = False
         for linea in reader.readlines():
-            print(linea)
-            if str('->'+fin) in linea:
-                rutas_posibles.append(linea[:'['])
-        
-        for linea in reader.readlines():
-            if str(inicio+'->') in linea:
-                aux_posibles.append(linea[inicio:'['])
+            if 'cerrad' in linea:
+                cerradas.append(linea[:linea.index('[')])
+            if inicio == fin:
+                done = True
+                # print("llego a su destino",inicio)
+                break
+            elif str(inicio+'->') in linea:
+                rutas_posibles.append(linea)
+            elif str('->'+fin) in linea:
+                rutas_posibles.append(linea)
 
-        print(rutas_posibles)
-        print(aux_posibles)
-        # if rutas_posibles!=None:
-        #     for dato in rutas_posibles:
-        #         if inicio in 
+        for cerrado in cerradas:
+            for posible in rutas_posibles:
+                if cerrado in posible:
+                    # print(cerrado)
+                    # print(posible)
+                    rutas_posibles.remove(posible)
 
         reader.close()
+        if done == False:
+            self.evaluar(rutas_posibles,inicio,fin,dot)
+        
+    def evaluar(self,linea, inicio, fin,dot):
+        # print(inicio)
+        nuevo_inicio = ''
+        peso = []
+        ruta_vieja = ''
+        ruta_pintar = ''
+        fast = ''
+        for dato in linea:
+            if str(inicio+'->') in dato:
+                peso.append(dato[dato.rfind('\\n')+2:dato.rfind('"')])
+                # print(peso)
+        fast = min(peso)
+        # print(fast)
+
+        for dato in linea:
+            # print(dato,'dato')
+            if str(fast) == dato[dato.rfind('\\n')+2:dato.rfind('"')]:
+                nuevo_inicio = dato[dato.index('>')+1:dato.index('[')]
+                ruta_vieja = dato
+                ruta_pintar = dato.replace(']',' penwidth=\"2\" color=\"#196f3d\"]')
+                
+        # print(nuevo_inicio)
+        self.ruta_rapida(nuevo_inicio,fin,dot)
+        self.sobre_escribir(dot,ruta_vieja,ruta_pintar)
+
+    def sobre_escribir(self,dot,ruta_vieja,ruta_nueva):
+        reader = open(dot,'r')
+        lineas = []
+        # new = []
+        for linea in reader.readlines():
+            if not ruta_vieja in linea:
+                lineas.append(linea)
+            if ruta_vieja in linea:
+                lineas.append(ruta_vieja.replace(ruta_vieja,ruta_nueva))
+        reader.close()
+
+        writer = open(dot, 'w')
+        for dato in lineas:
+            writer.write(dato)
+        writer.close()
