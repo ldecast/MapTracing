@@ -3,3 +3,6 @@ gg.dot
 ok-ok.dot
 __pycache__/Automata.cpython-38.pyc
 mm.py
+*.csv
+*.pdf
+*.txt
