@@ -1,0 +1,21 @@
+digraph D {
+rankdir="LR";
+splines=false;
+bgcolor="#abb2b9";
+label="MapaCentral" fontname="Century Gothic" labelloc="t";
+node[shape = "ellipse" style=filled fontname = "Century Gothic" color= "#283747"];
+edge[arrowhead=vee color="#566573" fontname="Sans-Serif" fontsize="10" penwidth="0.35"];
+estacionzona6[label = "estacionzona6\ndisponible"  fillcolor="#1A5AAF"];
+estacionzona2[label = "estacionzona2\ndisponible"  fillcolor="#AF5B1A"];
+estacionzona1[label = "estacionzona1\ndisponible"  fillcolor="#E52E22"];
+estacionzona5[label = "estacionzona5\ndisponible"  fillcolor="#208E40"];
+estacionzona4[label = "estacionzona4\ncerrada"  fillcolor="#AF5B1A"];
+estacionzona1->estacionzona6[label = "ruta_central\n2.5"]
+estacionzona6->estacionzona2[label = "ruta_central2\n4" penwidth="2" color="#196f3d"]
+estacionzona6->estacionzona1[label = "ruta2\n5"]
+estacionzona2->estacionzona1[label = "rutaexpress\n0.7" penwidth="2" color="#196f3d"]
+estacionzona1->estacionzona5[label = "rutajardines\n2" penwidth="2" color="#196f3d"]
+estacionzona6->estacionzona4[label = "ruta4\n1.2"]
+estacionzona4->estacionzona5[label = "ruta_4_5\n2"]
+estacionzona2->estacionzona5[label = "ruta_2_5\n3"]
+}

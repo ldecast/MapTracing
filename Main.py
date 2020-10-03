@@ -18,7 +18,7 @@ class Main:
     
     def inicio(self,opcion,init,inicio,fin):
         #fichero = input("Ingrese la ruta del archivo '.txt'----> ")
-        fichero = "C:\\Users\\luisd\\Desktop\\Ejemplo_proyecto.txt"
+        fichero = "C:\\Users\\luisd\\Desktop\\archivo.txt"
         if opcion=="1":
             print("\nLeyendo: ---"+fichero+"---\n")
             time.sleep(1.5)
@@ -42,13 +42,8 @@ class Main:
                 eFinal = input("Estación final: ")
                 print("\nGenerando ruta de "+eInicio+" a "+eFinal+"...")
                 time.sleep(1.5)
-                if Automata.Automata().aceptar(init,eInicio,eFinal,2) != False:
-                    input("Ruta generada! Presione Enter para continuar...")
-                    Main(init,eInicio,eFinal)
-                else:
-                    print("No se ha ingresado una estación válida. Intente de nuevo.")
-                    input("Presione Enter para continuar...")
-                    Main(init,None,None)
+                Automata.Automata().aceptar(init,eInicio,eFinal,2)
+                Main(init,eInicio,eFinal)
             
         elif opcion=="3":
             if init == None:
@@ -63,13 +58,12 @@ class Main:
                 print("\nGenerando mapa...")
                 time.sleep(1.5)
                 Automata.Automata().aceptar(init,inicio,fin,3)
-                input("Mapa generado! Presione Enter para continuar...")
                 Main(init,None,None)
             
         elif opcion=="4":
             self.system('cls')
             print("\nSaliendo...")
-            time.sleep(1.5)
+            time.sleep(1)
             exit()
 
         else:

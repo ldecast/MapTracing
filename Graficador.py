@@ -31,6 +31,7 @@ class Graficador:
             return f
         except IndexError:
             return None
+            
     def get_estado(self, lista, indice):
         a = 0
         f = None
@@ -45,6 +46,7 @@ class Graficador:
             return f
         except IndexError:
             return None
+
     def get_color(self, lista, indice):
         a = 0
         f = None
@@ -121,7 +123,6 @@ class Graficador:
             return None
     
     def limpiar(self, lexema):
-        # print(lexema)
         if lexema.count('>') == 3:
             a = [idx for idx, x in enumerate(lexema) if x=='>']
             b = [idx for idx, x in enumerate(lexema) if x=='<']
@@ -132,6 +133,40 @@ class Graficador:
             b = [idx for idx, x in enumerate(lexema) if x=='<']
             c = lexema[a.pop(0)+1:b.pop(1)]
             return c
+        
+    def purificar(self, lexema, tipo):
+        if tipo == "estacion" or tipo == "ruta" or tipo == "inicio" or tipo == "fin":
+            f = lexema
+            while(not f[0].isalpha()):
+               f = f[1:]
+            while(f[-1] != "_" and not f[-1].isalnum()):
+               f = f[:-1]
+            return f
+
+        elif tipo == "estado":
+            f = lexema
+            while(f[0] != "d" and f[0] != "c"):
+               f = f[1:]
+            while(f[-1] != "e" and f[-1] != "a"):
+               f = f[:-1]
+            return f
+
+        elif tipo == "color":
+            f = lexema
+            while(f[0] != "#"):
+               f = f[1:]
+            while(not f[-1].isalnum()):
+               f = f[:-1]
+            return f
+        
+        elif tipo == "peso":
+            f = lexema
+            while(not f[0].isnumeric()):
+               f = f[1:]
+            while(not f[-1].isnumeric()):
+               f = f[:-1]
+            return f
+            
     
     def graficar_ruta(self, lista_rutas, lista_estaciones, eInicio, eFin):
         node = ''
@@ -145,7 +180,7 @@ class Graficador:
             c = self.get_color(lista_estaciones,d)
             d += 3
             if a!=None and b!=None and c!=None:
-                estacion.append([self.limpiar(a),self.limpiar(b),self.limpiar(c)])
+                estacion.append([self.purificar(self.limpiar(a),"estacion"),self.purificar(self.limpiar(b),"estado"),self.purificar(self.limpiar(c),"color")])
 
         ruta = []
         e = 0
@@ -156,7 +191,7 @@ class Graficador:
             d = self.get_fin(lista_rutas,e)
             e += 4
             if a!=None and b!=None and c!=None and d!=None:
-                ruta.append([self.limpiar(a),self.limpiar(b),self.limpiar(c),self.limpiar(d)])
+                ruta.append([self.purificar(self.limpiar(a),"ruta"),self.purificar(self.limpiar(b),"peso"),self.purificar(self.limpiar(c),"inicio"),self.purificar(self.limpiar(d),"fin")])
 
         match1 = ''
         match2 = ''
@@ -174,7 +209,7 @@ class Graficador:
 
         if match1 != "" and match2 != "":
 
-            directorio = str("Ruta " + eInicio + "-" + eFin)+'.dot'
+            directorio = str("Ruta [" + eInicio + "-" + eFin + "]")+'.dot'
             grafo = open(directorio,'w',encoding="utf8")
             grafo.write('digraph D {\n')
             grafo.write("rankdir=\"LR\";\n")
@@ -214,7 +249,6 @@ class Graficador:
                 grafo.write(recorrido)
                 recorrido = ''
 
-
             grafo.write('}')
             grafo.close()
 
@@ -223,15 +257,16 @@ class Graficador:
             self.revisar(directorio)
             
             pre = directorio[:directorio.index('.dot')]
-            os.system('dot -Tpdf \"'+directorio+'\" -o \"Ruta ['+pre+'].pdf\"')
-            os.startfile('\"Ruta ['+pre+'].pdf\"')
-        
+            os.system('dot -Tpdf \"'+directorio+'\" -o \"'+pre+'.pdf\"')
+            os.startfile('\"'+pre+'.pdf\"')
+            input("Ruta generada! Presione Enter para continuar...")
+
         else:
-            return False
+            print("No se ha podido reconocer una estación válida. Por favor intente de nuevo.")
+            input("Presione Enter para continuar...")
 
     def graficar_mapa(self, lista_rutas, lista_estaciones, eInicio, eFin, name):
-        # print(lista_estaciones)
-        # print(lista_rutas)
+        
         if name != '' and name != None:
             titulo = self.limpiar(name)
 
@@ -246,8 +281,7 @@ class Graficador:
             c = self.get_color(lista_estaciones,d)
             d += 3
             if a!=None and b!=None and c!=None:
-                estacion.append([self.limpiar(a),self.limpiar(b),self.limpiar(c)])
-        # print(estacion)
+                estacion.append([self.purificar(self.limpiar(a),"estacion"),self.purificar(self.limpiar(b),"estado"),self.purificar(self.limpiar(c),"color")])
 
         ruta = []
         e = 0
@@ -258,28 +292,25 @@ class Graficador:
             d = self.get_fin(lista_rutas,e)
             e += 4
             if a!=None and b!=None and c!=None and d!=None:
-                ruta.append([self.limpiar(a),self.limpiar(b),self.limpiar(c),self.limpiar(d)])
-        # print(ruta)
+                ruta.append([self.purificar(self.limpiar(a),"ruta"),self.purificar(self.limpiar(b),"peso"),self.purificar(self.limpiar(c),"inicio"),self.purificar(self.limpiar(d),"fin")])
 
         match1 = ''
         match2 = ''
 
         for i in range(len(estacion)):
             for j in range(len(estacion[i])):
-                # print(estacion[i][j])
                 if eInicio == estacion[i][j]:
                     match1 = estacion[i][j]
         
         for i in range(len(estacion)):
             for j in range(len(estacion[i])):
-                # print(estacion[i][j])
                 if eFin == estacion[i][j]:
                     match2 = estacion[i][j]
         
 
         if match1 != "" and match2 != "":
 
-            directorio = str("Mapa " + eInicio + "-" + eFin)+'.dot'
+            directorio = str("Mapa [" + eInicio + "-" + eFin + "]")+'.dot'
             grafo = open(directorio,'w',encoding="utf8")
             grafo.write('digraph D {\n')
             grafo.write("rankdir=\"LR\";\n")
@@ -290,7 +321,6 @@ class Graficador:
             grafo.write("edge[arrowhead=vee color=\"#566573\" fontname=\"Sans-Serif\" fontsize=\"10\" penwidth=\"0.35\"];\n")
             for i in range(len(estacion)):
                 for j in range(len(estacion[i])):
-                    # print(estacion[i][j])
                     if eInicio == estacion[i][j]:
                         match1 = estacion[i][j]
                     if eFin == estacion[i][j]:
@@ -303,17 +333,14 @@ class Graficador:
                     elif '#' in estacion[i][j] and contenido != '':
                         contenido = contenido + "  fillcolor=\""+ estacion[i][j] +"\"];\n"
                 grafo.write(contenido)
-                # print(contenido)
+                
                 contenido = ''
-            # rutas_posibles = []
+            
             recorrido = ''
             flecha = ''
             peso = ''
             for k in range(len(ruta)):
                 for l in range(len(ruta[k])):
-                    # print(ruta[k][l])
-                    # if eInicio == ruta[k][l]:
-                    #     rutas_posibles.append(k)
                     if 'ruta' in ruta[k][l]:
                         flecha = ruta[k][l]
                     if '.' in ruta[k][l] or ruta[k][l].isdigit():
@@ -325,7 +352,6 @@ class Graficador:
                 recorrido = recorrido + "[label = \""+ flecha + "\\n" + peso +"\"]\n"
                 grafo.write(recorrido)
                 recorrido = ''
-            # print(hola)
 
             grafo.write('}')
             grafo.close()
@@ -333,11 +359,13 @@ class Graficador:
             self.ruta_rapida(match1,match2,directorio)
                     
             pre = directorio[:directorio.index('.dot')]
-            os.system('dot -Tpdf \"'+directorio+'\" -o \"Mapa ['+pre+'].pdf\"')
-            os.startfile('\"Mapa ['+pre+'].pdf\"')
+            os.system('dot -Tpdf \"'+directorio+'\" -o \"'+pre+'.pdf\"')
+            os.startfile('\"'+pre+'.pdf\"')
+            input("Mapa generado! Presione Enter para continuar...")
         
         else:
-            return False
+            print("No se ha podido reconocer una estación válida. Por favor intente de nuevo.")
+            input("Presione Enter para continuar...")
     
     def ruta_rapida(self, inicio, fin, dot):
         reader = open(dot,'r')
@@ -349,7 +377,6 @@ class Graficador:
                 cerradas.append(linea[:linea.index('[')])
             if inicio == fin:
                 done = True
-                # print("llego a su destino",inicio)
                 break
             elif str(inicio+'->') in linea:
                 rutas_posibles.append(linea)
@@ -359,16 +386,14 @@ class Graficador:
         for cerrado in cerradas:
             for posible in rutas_posibles:
                 if cerrado in posible:
-                    # print(cerrado)
-                    # print(posible)
                     rutas_posibles.remove(posible)
 
         reader.close()
         if done == False:
             self.evaluar(rutas_posibles,inicio,fin,dot)
+            
         
     def evaluar(self,linea, inicio, fin,dot):
-        # print(inicio)
         nuevo_inicio = ''
         peso = []
         ruta_vieja = ''
@@ -377,20 +402,19 @@ class Graficador:
         for dato in linea:
             if str(inicio+'->') in dato:
                 peso.append(dato[dato.rfind('\\n')+2:dato.rfind('"')])
-                # print(peso)
-        fast = min(peso)
-        # print(fast)
+        if peso!= []:
+            fast = min(peso)
+            for dato in linea:
+                if str(fast) == dato[dato.rfind('\\n')+2:dato.rfind('"')]:
+                    nuevo_inicio = dato[dato.index('>')+1:dato.index('[')]
+                    ruta_vieja = dato
+                    ruta_pintar = dato.replace(']',' penwidth=\"2\" color=\"#196f3d\"]')
+            # print(nuevo_inicio)
+            self.ruta_rapida(nuevo_inicio,fin,dot)
+            self.sobre_escribir(dot,ruta_vieja,ruta_pintar)
+        else:
+            return False
 
-        for dato in linea:
-            # print(dato,'dato')
-            if str(fast) == dato[dato.rfind('\\n')+2:dato.rfind('"')]:
-                nuevo_inicio = dato[dato.index('>')+1:dato.index('[')]
-                ruta_vieja = dato
-                ruta_pintar = dato.replace(']',' penwidth=\"2\" color=\"#196f3d\"]')
-                
-        # print(nuevo_inicio)
-        self.ruta_rapida(nuevo_inicio,fin,dot)
-        self.sobre_escribir(dot,ruta_vieja,ruta_pintar)
 
     def sobre_escribir(self,dot,ruta_vieja,ruta_nueva):
         reader = open(dot,'r')
@@ -406,6 +430,7 @@ class Graficador:
         for dato in lineas:
             writer.write(dato)
         writer.close()
+
 
     def revisar(self, directorio):
         reader = open(directorio,'r')

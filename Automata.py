@@ -56,7 +56,7 @@ class Automata:
                 columna = 0
                 for caracter in linea:
                     columna = columna + 1
-                    if caracter == "\n": #or caracter == "\r":
+                    if caracter == "\n":
                         continue
                     elif caracter == "\t":
                         continue
@@ -129,7 +129,6 @@ class Automata:
                             estado = 3
                             lexema = lexema.replace(caracter,'')
                             continue
-                            # estado = -3
 
                     elif estado == 4:
                         if ord(caracter) >= 65 and ord(caracter) <= 122:#es letra
@@ -284,8 +283,6 @@ class Automata:
                     
                     continue
 
-                # elif estado == -1:
-                    
                 else:
                     print('Cadena inválida: '+lexema+'\n'+"Estado: "+str(estado))
 
