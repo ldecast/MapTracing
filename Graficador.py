@@ -429,6 +429,7 @@ class Graficador:
                 if not linea[linea.index('>')-1:linea.index('[')] in super_aux:
                     rutas_posibles.append(linea)
                     if not str('->'+fin) in linea:
+                        super_aux.append(str('->'+nuevo_inicio))
                         super_aux.append(linea[linea.index('>')-1:linea.index('[')])
 
         for cerrado in cerradas:

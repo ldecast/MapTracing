@@ -17,8 +17,8 @@ class Main:
         self.inicio(opcion,init,inicio,fin)
     
     def inicio(self,opcion,init,inicio,fin):
-        # fichero = input("Ingrese la ruta del archivo '.txt'----> ")
-        fichero = "C:\\Users\\luisd\\Desktop\\input2.txt"
+        fichero = input("Ingrese la ruta del archivo '.txt'----> ")
+        # fichero = "C:\\Users\\luisd\\Desktop\\input2.txt"
         if opcion=="1":
             print("\nLeyendo: ---"+fichero+"---\n")
             time.sleep(1.5)
