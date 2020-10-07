@@ -17,12 +17,12 @@ class Main:
         self.inicio(opcion,init,inicio,fin)
     
     def inicio(self,opcion,init,inicio,fin):
-        #fichero = input("Ingrese la ruta del archivo '.txt'----> ")
-        fichero = "C:\\Users\\luisd\\Desktop\\archivo.txt"
+        # fichero = input("Ingrese la ruta del archivo '.txt'----> ")
+        fichero = "C:\\Users\\luisd\\Desktop\\input2.txt"
         if opcion=="1":
             print("\nLeyendo: ---"+fichero+"---\n")
             time.sleep(1.5)
-            aceptacion = Automata.Automata().aceptar(fichero, None, None, 0)
+            aceptacion = Automata.Automata().aceptar(fichero, None, None, opcion)
             if aceptacion == False:
                 print("El archivo seleccionado no se encuentra. Intente de nuevo.")
                 input("Presione Enter para continuar...")
@@ -31,18 +31,18 @@ class Main:
                 input("Presione Enter para continuar...")
                 Main(aceptacion,None,None)
 
-        elif opcion=="2":
+        elif opcion=="2" or opcion=="5":
             if init == None:
                 print("No se ha leído ningún archivo.")
                 input("Presione Enter para continuar e ingrese una entrada: ")
                 Main(None,None,None)
             else:
                 print("\n")
-                eInicio = input("Estación inicio: ")
-                eFinal = input("Estación final: ")
+                eInicio = input("Estación inicio: ").lower()
+                eFinal = input("Estación final: ").lower()
                 print("\nGenerando ruta de "+eInicio+" a "+eFinal+"...")
                 time.sleep(1.5)
-                Automata.Automata().aceptar(init,eInicio,eFinal,2)
+                Automata.Automata().aceptar(init,eInicio,eFinal,opcion)
                 Main(init,eInicio,eFinal)
             
         elif opcion=="3":
@@ -57,7 +57,7 @@ class Main:
             elif init != None and inicio != None and fin != None:
                 print("\nGenerando mapa...")
                 time.sleep(1.5)
-                Automata.Automata().aceptar(init,inicio,fin,3)
+                Automata.Automata().aceptar(init,inicio,fin,opcion)
                 Main(init,None,None)
             
         elif opcion=="4":
@@ -65,7 +65,18 @@ class Main:
             print("\nSaliendo...")
             time.sleep(1)
             exit()
-
+        
+        elif opcion == "6":
+            if init == None:
+                print("No se ha leído ningún archivo.")
+                input("Presione Enter para continuar e ingrese una entrada: ")
+                Main(None,None,None)
+            elif init != None:
+                print("\nGenerando mapa...")
+                time.sleep(1.5)
+                Automata.Automata().aceptar(init,inicio,fin,opcion)
+                Main(init,'Proyecto','1')
+        
         else:
             opcion = input("Seleccione una opción valida [1-4]: ")
             self.inicio(opcion,init,inicio,fin)
